@@ -1,5 +1,5 @@
 package humanResources;
-
+//todo use System.arraycopy()
 public class Organization {
     private String name;
     private Department[] departments;
@@ -20,6 +20,7 @@ public class Organization {
     }
 
     public void addDepartment (Department department){
+        //todo remove code duplicates
         if (size < departments.length){
             this.departments[size] = department;
             this.size++;
@@ -38,7 +39,7 @@ public class Organization {
                 for (int j = i; j < size - 1; j++) {
                     this.departments[j] = this.departments[j+1];
                 }
-                this.departments[size] = null;
+                this.departments[size-1] = null;
                 size--;
                 return true;
             }
@@ -64,25 +65,26 @@ public class Organization {
     }
 
     public int employeesQuantity(){
-        int numberOfEmployess = 0;
-        for (int i = 0; i< size; i++){
-            numberOfEmployess += departments[i].getSize();
+        int numberOfEmployees = 0;
+        for (int i = 0; i < size; i++){
+            numberOfEmployees += departments[i].getSize();
         }
-        return numberOfEmployess;
+        return numberOfEmployees;
     }
 
     public int employeesQuantity(String jobTitle){
-        int numberOfEmployess = 0;
+        int numberOfEmployees = 0;
         for (int i = 0; i< size; i++){
-            numberOfEmployess += departments[i].employeesQuantity(jobTitle);
+            numberOfEmployees += departments[i].employeesQuantity(jobTitle);
         }
-        return numberOfEmployess;
+        return numberOfEmployees;
     }
 
     public Employee bestEmployee(){
         if (size > 0) {
             Employee employeeWithHighestSalary = departments[0].bestEmployee();
-            for (int i = 1; i < this.size - 1; i++) {
+            for (int i = 1; i < this.size; i++) {
+                //todo Employee bestEmployee = dep[i].bestEMployee();
                 if (departments[i].bestEmployee().getSalary() > employeeWithHighestSalary.getSalary()) {
                     employeeWithHighestSalary = departments[i].bestEmployee();
                 }
@@ -93,7 +95,7 @@ public class Organization {
 
     public Department getEmployeeDepartment(String firstName, String secondName){
         for (int i = 0; i< size; i++){
-            if (departments[i].findEmployee(firstName, secondName))
+            if (departments[i].hasEmployee(firstName, secondName))
                 return departments[i];
         }
         return null;

@@ -16,6 +16,7 @@ public class Main {
     private static Department department2 = new Department("Ещё один департамент", employees2);
     private static Department[] departments = {department1};
     private static Organization organization = new Organization("Тестовая организация", departments);
+    private static Organization uselessOrganization = new Organization("Организация которая не используется");
 
     private static void printEmployee(Employee employee) {
         System.out.printf("Имя: %s   Фамилия: %s  Должность: %s  Зарплата: %d \n", employee.getFirstName(), employee.getSecondName(), employee.getJobTitle(), employee.getSalary());
@@ -25,6 +26,7 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         System.out.println("Какой тест запустить (1/2)?");
         int i = sc.nextInt();
+        sc.nextLine();
         if (i == 1) {
             System.out.println("Нужно больше рабочих");
             System.out.print("Имя: ");
@@ -40,15 +42,23 @@ public class Main {
         }
         else {
             organization.addDepartment(department2);
+            for (Department dep:organization.getDepartments()){
+                for (Employee emp:dep.employeesSortedBySalary()){
+                    printEmployee(emp);
+                }
+            }
             System.out.printf("В организации находится %d департаментов\n", organization.getSize());
             System.out.printf("В организации находится %d работников\n", organization.employeesQuantity());
             System.out.printf("В организации находится %d работников на должности Директор\n", organization.employeesQuantity("Директор"));
-            System.out.printf("Наибольшую зарплату имеет %s %s в размере %d \n", organization.bestEmployee().getFirstName(), organization.bestEmployee().getSecondName(), organization.bestEmployee().getSalary());
+            Employee bestEmployee = organization.bestEmployee();
+            System.out.printf("Наибольшую зарплату имеет %s %s %s в размере %d \n", bestEmployee.getFirstName(), bestEmployee.getSecondName(), bestEmployee.getJobTitle(), bestEmployee.getSalary());
             organization.fireDepartment(organization.getDepartment("Тестовый департамент").getName());
             System.out.printf("В организации находится %d департаментов\n", organization.getSize());
             System.out.printf("В организации находится %d работников\n", organization.employeesQuantity());
             System.out.printf("В организации находится %d работников на должности Директор\n", organization.employeesQuantity("Директор"));
-            System.out.printf("Наибольшую зарплату имеет %s %s в размере %d \n", organization.bestEmployee().getFirstName(), organization.bestEmployee().getSecondName(), organization.bestEmployee().getSalary());
+            bestEmployee = organization.bestEmployee();
+            System.out.printf("Наибольшую зарплату имеет %s %s %s в размере %d \n", bestEmployee.getFirstName(), bestEmployee.getSecondName(), bestEmployee.getJobTitle(), bestEmployee.getSalary());
+            System.out.printf("Иванов находится в департаменте - %s\n", organization.getEmployeeDepartment("Иван","Иванов").getName());
         }
     }
 }
