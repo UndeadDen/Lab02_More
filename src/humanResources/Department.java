@@ -7,110 +7,94 @@ public class Department {
     private int size;
     private static final int DEFAULT_CAPACITY = 8;
 
-    public Department (String name){
+    public Department(String name) {
         this(name, DEFAULT_CAPACITY);
     }
 
-    public Department (String name, int departmentSize){
+    public Department(String name, int departmentSize) {
         this.name = name;
         this.employees = new Employee[departmentSize];
         this.size = 0;
     }
 
-    public Department (String name, Employee[] employees){
+    public Department(String name, Employee[] employees) {
         this.name = name;
-        this.employees = employees; //todo create new array
-        //todo use System.arrayCopy()
+        this.employees = new Employee[employees.length]; //todo create new array
+        System.arraycopy(employees, 0, this.employees, 0, employees.length);//todo use System.arrayCopy()
         for (int i = 0; i < employees.length; i++)
             if (employees[i] != null)
                 this.size++;
     }
 
-    public String getName(){
+    public String getName() {
         return this.name;
     }
 
-    public void addEmployee (Employee employee){
+    public void addEmployee(Employee employee) {
         //todo remove code duplicates
-        if (size < employees.length){
-            this.employees[size] = employee;
-            this.size++;
-        } else {
+        if (size >= employees.length) {
             Employee[] newEmployees = new Employee[employees.length * 2];
-            System.arraycopy(employees, 0, newEmployees, 0 , size);
+            System.arraycopy(employees, 0, newEmployees, 0, size);
             this.employees = newEmployees;
-            this.employees[size] = employee;
-            this.size++;
         }
+        this.employees[size] = employee;
+        this.size++;
 
     }
 
-    public boolean fireEmployee (String firstName, String secondName){
-        for (int i = 0; i< size; i++)
+    public boolean fireEmployee(String firstName, String secondName) {
+        for (int i = 0; i < size; i++)
             if (this.employees[i].getFirstName().equals(firstName) && this.employees[i].getSecondName().equals(secondName)) {
-            //todo System.arraycopy()
-            for (int j = i; j < size - 1; j++) {
-                    this.employees[j] = this.employees[j+1];
-                }
-                this.employees[size-1] = null;
-
+                //todo System.arraycopy()
+                System.arraycopy(employees, i+1, employees, i, size-i-1);
+                this.employees[size - 1] = null;
                 size--;
                 return true;
             }
         return false;
     }
 
-    public int getSize(){
+    public int getSize() {
         return size;
     }
 
-    public Employee[] getEmployees (){
+    public Employee[] getEmployees() {
         Employee[] onlyEmployees = new Employee[this.size];
-        System.arraycopy(employees, 0 , onlyEmployees, 0 , size);
+        System.arraycopy(employees, 0, onlyEmployees, 0, size);
         return onlyEmployees;
     }
 
-    public Employee[] employeesByJobTitle (String jobTitle){
-        Employee[] onlyEmployees;
+    public Employee[] employeesByJobTitle(String jobTitle) {
+        Employee[] newEmployees = new Employee[employeesQuantity(jobTitle)];
 
-        int amountOfEmployeesWithSetJobTitle = 0; //todo quantity or count
+        int employeeCounter = 0; //todo rename j
 
-        for (int i = 0; i < this.size; i++){
-            if (employees[i].getJobTitle().equals(jobTitle)){
-               amountOfEmployeesWithSetJobTitle++;
-            }
-        }
-        //todo use employeesQuantity(jobTitle)
-        onlyEmployees = new Employee[amountOfEmployeesWithSetJobTitle];
-
-        int j = 0; //todo rename j
-
-        for (int i = 0; i < this.size; i++){
+        for (int i = 0; i < this.size; i++) {
             if (employees[i].getJobTitle().equals(jobTitle)) {
-                onlyEmployees[j] = this.employees[i];
-                j++;
+                newEmployees[employeeCounter] = this.employees[i];
+                employeeCounter++;
             }
         }
-        return onlyEmployees;
+        return newEmployees;
     }
 
-    public int employeesQuantity (String jobTitle){
+    public int employeesQuantity(String jobTitle) {
         int numberOfEmployeesWithSetJobTitle = 0;
-        for (int i = 0; i < this.size; i++){
-            if (employees[i].getJobTitle().equals(jobTitle)){
+        for (int i = 0; i < this.size; i++) {
+            if (employees[i].getJobTitle().equals(jobTitle)) {
                 numberOfEmployeesWithSetJobTitle++;
             }
         }
         return numberOfEmployeesWithSetJobTitle;
     }
 
-    public Employee[] employeesSortedBySalary(){
+    public Employee[] employeesSortedBySalary() {
         //todo use getEmployees()
-        Employee[] onlyEmployees = new Employee[this.size];
-        System.arraycopy(employees, 0 , onlyEmployees, 0 , size);
-        for (int i = 0; i < this.size - 1; i++){
-            for (int j = i+1; j <this.size; j++){
-                if (onlyEmployees[i].getSalary() < onlyEmployees[j].getSalary()){
+        Employee[] onlyEmployees = getEmployees();
+        System.arraycopy(employees, 0, onlyEmployees, 0, size);
+        for (int i = 0; i < this.size - 1; i++) {
+            for (int j = i + 1; j < this.size; j++) {
+                if (onlyEmployees[i].getSalary() < onlyEmployees[j].getSalary()) {
                     Employee x = onlyEmployees[j];
                     onlyEmployees[j] = onlyEmployees[i];
                     onlyEmployees[i] = x;
@@ -120,7 +104,7 @@ public class Department {
         return onlyEmployees;
     }
 
-    public Employee bestEmployee(){
+    public Employee bestEmployee() {
         if (size > 0) {
             Employee employeeWithHighestSalary = employees[0];
             for (int i = 1; i < this.size; i++) {
@@ -132,8 +116,8 @@ public class Department {
         } else return null;
     }
 
-    public boolean hasEmployee(String firstName, String secondName){
-        for (int i = 0; i< size; i++)
+    public boolean hasEmployee(String firstName, String secondName) {
+        for (int i = 0; i < size; i++)
             if (this.employees[i].getFirstName().equals(firstName) && this.employees[i].getSecondName().equals(secondName)) {
                 return true;
             }
